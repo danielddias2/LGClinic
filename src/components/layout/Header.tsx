@@ -1,0 +1,149 @@
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+
+const NAV_LINKS = [
+  { label: 'Início', to: '/' },
+  { label: 'Serviços', to: '/#servicos' },
+  { label: 'Sobre', to: '/#sobre' },
+  { label: 'Contato', to: '/#contato' },
+]
+
+export default function Header() {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 24)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Fecha menu mobile ao redimensionar para desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setMobileOpen(false)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Impede scroll no body quando menu mobile está aberto
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
+
+  return (
+    <header
+      className={[
+        'fixed top-0 inset-x-0 z-50 transition-all duration-300',
+        isScrolled
+          ? 'bg-[#FAFAF8]/95 backdrop-blur-sm border-b border-[#E8E0D6]'
+          : 'bg-transparent',
+      ].join(' ')}
+    >
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+
+          {/* Logotipo */}
+          <Link
+            to="/"
+            className="flex flex-col leading-none"
+            aria-label="LG Clinic — página inicial"
+          >
+            <span
+              className="font-display text-xl sm:text-2xl font-light tracking-[0.12em] text-[#18181B]"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              LG
+            </span>
+            <span className="text-[9px] tracking-[0.3em] uppercase text-[#C4976A] font-light">
+              Clinic
+            </span>
+          </Link>
+
+          {/* Nav desktop */}
+          <nav className="hidden md:flex items-center gap-8" aria-label="Navegação principal">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.to}
+                href={link.to}
+                className="text-sm tracking-wide text-[#18181B] hover:text-[#C4976A] transition-colors duration-200"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* CTA desktop */}
+          <div className="hidden md:flex">
+            <Link
+              to="/agendamento"
+              className="inline-flex items-center px-5 py-2.5 text-sm font-medium tracking-wide text-[#FAFAF8] bg-[#18181B] hover:bg-[#C4976A] transition-colors duration-200"
+            >
+              Agendar consulta
+            </Link>
+          </div>
+
+          {/* Botão menu mobile */}
+          <button
+            className="md:hidden flex flex-col justify-center gap-1.5 w-10 h-10 -mr-2"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
+          >
+            <span
+              className={[
+                'block h-px w-6 bg-[#18181B] transition-all duration-200 origin-center',
+                mobileOpen ? 'translate-y-[7px] rotate-45' : '',
+              ].join(' ')}
+            />
+            <span
+              className={[
+                'block h-px w-6 bg-[#18181B] transition-all duration-200',
+                mobileOpen ? 'opacity-0' : '',
+              ].join(' ')}
+            />
+            <span
+              className={[
+                'block h-px w-6 bg-[#18181B] transition-all duration-200 origin-center',
+                mobileOpen ? '-translate-y-[7px] -rotate-45' : '',
+              ].join(' ')}
+            />
+          </button>
+        </div>
+      </div>
+
+      {/* Menu mobile */}
+      <div
+        id="mobile-nav"
+        aria-hidden={!mobileOpen}
+        className={[
+          'md:hidden fixed inset-0 top-16 bg-[#FAFAF8] z-40 transition-all duration-300 flex flex-col',
+          mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+        ].join(' ')}
+      >
+        <nav className="flex flex-col px-5 pt-8 gap-6" aria-label="Navegação mobile">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.to}
+              href={link.to}
+              onClick={() => setMobileOpen(false)}
+              className="text-lg font-light tracking-wide text-[#18181B] border-b border-[#E8E0D6] pb-4"
+            >
+              {link.label}
+            </a>
+          ))}
+          <Link
+            to="/agendamento"
+            onClick={() => setMobileOpen(false)}
+            className="mt-4 inline-flex items-center justify-center px-6 py-4 text-sm font-medium tracking-wide text-[#FAFAF8] bg-[#18181B]"
+          >
+            Agendar consulta
+          </Link>
+        </nav>
+      </div>
+    </header>
+  )
+}
