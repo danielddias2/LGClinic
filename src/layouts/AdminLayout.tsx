@@ -65,7 +65,7 @@ export default function AdminLayout() {
         </Link>
         <button
           onClick={() => setMobileMenuOpen((prev) => !prev)}
-          className="text-[#FAFAF8] p-1.5 -mr-1"
+          className="text-[#FAFAF8] p-2 rounded hover:bg-[#2D2D2F] transition-colors"
           aria-label={mobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
         >
           {mobileMenuOpen ? (
