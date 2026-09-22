@@ -169,12 +169,12 @@ export function useDashboard(): UseDashboardResult {
     }
   }, [appointments, clients])
 
-  // Filtro de próximos atendimentos relevantes (apenas 'pending' ou 'confirmed')
+  // Filtro de próximos atendimentos relevantes:
+  // Regra: status ∈ {pending, confirmed} AND start_at > agora
   const upcomingAppointments = useMemo<AdminAppointment[]>(() => {
     if (!Array.isArray(appointments) || appointments.length === 0) return []
 
-    const today = getTodayString()
-    const nowTimestamp = Date.now()
+    const now = Date.now()
 
     const activeList = appointments.filter((a) => {
       if (!a || !a.start_at) return false
@@ -186,13 +186,11 @@ export function useDashboard(): UseDashboardResult {
       const appStartTime = new Date(a.start_at).getTime()
       if (isNaN(appStartTime)) return false
 
-      const appDateStr = extractLocalDateString(a.start_at)
-
-      // Considera atendimentos de hoje ou datas futuras (com tolerância para atendimentos recém-iniciados)
-      return appDateStr >= today || appStartTime >= nowTimestamp - 30 * 60 * 1000
+      // Somente agendamentos que ainda acontecerão a partir do momento atual (start_at > agora)
+      return appStartTime > now
     })
 
-    // Ordenação cronológica crescente (do mais próximo para o futuro)
+    // Ordenação cronológica crescente (do mais próximo para o futuro: start_at ASC)
     activeList.sort((a, b) => {
       const timeA = new Date(a.start_at).getTime()
       const timeB = new Date(b.start_at).getTime()
