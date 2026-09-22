@@ -86,6 +86,19 @@ export type AppointmentStatus =
   | 'completed'
   | 'cancelled'
 
+export type ExtendedAppointmentStatus = AppointmentStatus | 'no_show'
+
+export interface DashboardMetrics {
+  todayAppointmentsCount: number
+  pendingCount: number
+  confirmedCount: number
+  totalClientsCount: number
+  completedCount: number
+  cancelledCount: number
+  noShowCount: number
+  totalAppointmentsCount: number
+}
+
 export interface AdminAppointment {
   appointment_id: string
   start_at: string
