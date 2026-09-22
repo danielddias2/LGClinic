@@ -15,14 +15,20 @@ import { getTodayString } from '@/utils/formatters'
 
 /**
  * Extrai a data local no formato 'YYYY-MM-DD' a partir de um timestamp ISO/timestamptz.
- * Mantém paridade estrita com o padrão utilizado em Agenda.tsx.
+ * Protegido contra valores nulos, vazios ou inválidos (nunca lança exceção).
  */
-export function extractLocalDateString(iso: string): string {
-  const d = new Date(iso)
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  return `${y}-${m}-${day}`
+export function extractLocalDateString(iso?: string | null): string {
+  if (!iso || typeof iso !== 'string') return ''
+  try {
+    const d = new Date(iso)
+    if (isNaN(d.getTime())) return ''
+    const y = d.getFullYear()
+    const m = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${y}-${m}-${day}`
+  } catch {
+    return ''
+  }
 }
 
 export interface UseDashboardResult {
@@ -45,22 +51,77 @@ export function useDashboard(): UseDashboardResult {
   const loadData = useCallback(async () => {
     setState('loading')
     setError(null)
-    try {
-      const [appointmentsData, clientsData, settingsData] = await Promise.all([
-        getAppointmentsAdmin(),
-        getClientsAdmin(),
-        getClinicSettings(),
-      ])
 
-      setAppointments(appointmentsData)
-      setClients(clientsData)
-      setClinicSettings(settingsData)
-      setState('success')
+    try {
+      // Executa as consultas com allSettled para evitar que a falha de uma derrube as outras
+      const [appointmentsResult, clientsResult, settingsResult] =
+        await Promise.allSettled([
+          getAppointmentsAdmin(),
+          getClientsAdmin(),
+          getClinicSettings(),
+        ])
+
+      let hasAnySuccess = false
+      const errorMessages: string[] = []
+
+      // 1. Agendamentos
+      if (appointmentsResult.status === 'fulfilled') {
+        const raw = appointmentsResult.value
+        setAppointments(Array.isArray(raw) ? raw : [])
+        hasAnySuccess = true
+      } else {
+        console.error(
+          '[LG Clinic Dashboard] Erro ao carregar agendamentos:',
+          appointmentsResult.reason
+        )
+        errorMessages.push('agendamentos')
+      }
+
+      // 2. Clientes
+      if (clientsResult.status === 'fulfilled') {
+        const raw = clientsResult.value
+        setClients(Array.isArray(raw) ? raw : [])
+        hasAnySuccess = true
+      } else {
+        console.error(
+          '[LG Clinic Dashboard] Erro ao carregar clientes:',
+          clientsResult.reason
+        )
+        errorMessages.push('clientes')
+      }
+
+      // 3. Configurações da Clínica
+      if (settingsResult.status === 'fulfilled') {
+        setClinicSettings(settingsResult.value ?? null)
+        hasAnySuccess = true
+      } else {
+        console.error(
+          '[LG Clinic Dashboard] Erro ao carregar configurações:',
+          settingsResult.reason
+        )
+        errorMessages.push('configurações')
+      }
+
+      // Se ao menos uma consulta teve sucesso, o painel renderiza normalmente
+      if (hasAnySuccess) {
+        setState('success')
+        if (errorMessages.length > 0) {
+          setError(
+            `Aviso: Não foi possível sincronizar todos os dados (${errorMessages.join(', ')}).`
+          )
+        }
+      } else {
+        setState('error')
+        setError('Não foi possível conectar aos serviços do Supabase. Verifique sua conexão e credenciais.')
+      }
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Não foi possível carregar os dados do painel.'
-      )
+      console.error('[LG Clinic Dashboard] Erro inesperado no ciclo de carga:', err)
       setState('error')
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Ocorreu um erro inesperado ao carregar o dashboard.'
+      )
     }
   }, [])
 
@@ -68,25 +129,39 @@ export function useDashboard(): UseDashboardResult {
     loadData()
   }, [loadData])
 
-  // Cálculo das métricas gerais
+  // Cálculo de métricas gerais (100% resiliente a dados nulos)
   const metrics = useMemo<DashboardMetrics>(() => {
     const today = getTodayString()
 
-    const todayAppointments = appointments.filter(
-      (a) => extractLocalDateString(a.start_at) === today
-    )
+    if (!Array.isArray(appointments)) {
+      return {
+        todayAppointmentsCount: 0,
+        pendingCount: 0,
+        confirmedCount: 0,
+        totalClientsCount: Array.isArray(clients) ? clients.length : 0,
+        completedCount: 0,
+        cancelledCount: 0,
+        noShowCount: 0,
+        totalAppointmentsCount: 0,
+      }
+    }
 
-    const pending = appointments.filter((a) => a.status === 'pending')
-    const confirmed = appointments.filter((a) => a.status === 'confirmed')
-    const completed = appointments.filter((a) => a.status === 'completed')
-    const cancelled = appointments.filter((a) => a.status === 'cancelled')
-    const noShow = appointments.filter((a) => (a.status as string) === 'no_show')
+    const todayAppointments = appointments.filter((a) => {
+      if (!a || !a.start_at) return false
+      return extractLocalDateString(a.start_at) === today
+    })
+
+    const pending = appointments.filter((a) => a?.status === 'pending')
+    const confirmed = appointments.filter((a) => a?.status === 'confirmed')
+    const completed = appointments.filter((a) => a?.status === 'completed')
+    const cancelled = appointments.filter((a) => a?.status === 'cancelled')
+    const noShow = appointments.filter((a) => (a?.status as string) === 'no_show')
 
     return {
       todayAppointmentsCount: todayAppointments.length,
       pendingCount: pending.length,
       confirmedCount: confirmed.length,
-      totalClientsCount: clients.length,
+      totalClientsCount: Array.isArray(clients) ? clients.length : 0,
       completedCount: completed.length,
       cancelledCount: cancelled.length,
       noShowCount: noShow.length,
@@ -94,29 +169,37 @@ export function useDashboard(): UseDashboardResult {
     }
   }, [appointments, clients])
 
-  // Filtro de próximos atendimentos relevantes (somente 'pending' ou 'confirmed')
+  // Filtro de próximos atendimentos relevantes (apenas 'pending' ou 'confirmed')
   const upcomingAppointments = useMemo<AdminAppointment[]>(() => {
+    if (!Array.isArray(appointments) || appointments.length === 0) return []
+
     const today = getTodayString()
     const nowTimestamp = Date.now()
 
-    // Filtra agendamentos relevantes futuros ou de hoje com status ativo
-    const activeAppointments = appointments.filter((a) => {
-      const isRelevantStatus = a.status === 'pending' || a.status === 'confirmed'
-      if (!isRelevantStatus) return false
+    const activeList = appointments.filter((a) => {
+      if (!a || !a.start_at) return false
+
+      // Somente status 'pending' ou 'confirmed' conforme especificação
+      const isPendingOrConfirmed = a.status === 'pending' || a.status === 'confirmed'
+      if (!isPendingOrConfirmed) return false
+
+      const appStartTime = new Date(a.start_at).getTime()
+      if (isNaN(appStartTime)) return false
 
       const appDateStr = extractLocalDateString(a.start_at)
-      const appStartTime = new Date(a.start_at).getTime()
 
-      // Inclui agendamentos de hoje (mesmo se recém-iniciados) ou de datas futuras
+      // Considera atendimentos de hoje ou datas futuras (com tolerância para atendimentos recém-iniciados)
       return appDateStr >= today || appStartTime >= nowTimestamp - 30 * 60 * 1000
     })
 
-    // Ordena do mais próximo para o mais distante no tempo
-    activeAppointments.sort(
-      (a, b) => new Date(a.start_at).getTime() - new Date(b.start_at).getTime()
-    )
+    // Ordenação cronológica crescente (do mais próximo para o futuro)
+    activeList.sort((a, b) => {
+      const timeA = new Date(a.start_at).getTime()
+      const timeB = new Date(b.start_at).getTime()
+      return timeA - timeB
+    })
 
-    return activeAppointments.slice(0, 6)
+    return activeList.slice(0, 6)
   }, [appointments])
 
   return {
