@@ -5,6 +5,11 @@ import { useServices } from '@/hooks/useServices'
 import { useClinicSettings } from '@/hooks/useClinicSettings'
 import { createPublicAppointment } from '@/services/clinicService'
 import { getFriendlyError } from '@/utils/errorMessages'
+import {
+  getCachedClientData,
+  setCachedClientData,
+  clearCachedClientData,
+} from '@/utils/bookingCache'
 import BookingProgress from '@/components/booking/BookingProgress'
 import StepService from '@/components/booking/StepService'
 import StepDate from '@/components/booking/StepDate'
@@ -47,7 +52,10 @@ export default function Agendamento() {
   const [searchParams] = useSearchParams()
   const { services, state: servicesState } = useServices()
   const { settings, state: settingsState } = useClinicSettings()
-  const [booking, setBooking] = useState<BookingState>(INITIAL_STATE)
+  const [booking, setBooking] = useState<BookingState>(() => ({
+    ...INITIAL_STATE,
+    client: getCachedClientData(),
+  }))
 
   // Pré-seleciona serviço via ?servico=ID (link vindo da Home)
   useEffect(() => {
@@ -93,6 +101,7 @@ export default function Agendamento() {
 
   function updateClient(client: ClientData) {
     setBooking((prev) => ({ ...prev, client }))
+    setCachedClientData(client)
   }
 
   // ── Navegação entre etapas ────────────────────────────────
@@ -139,12 +148,16 @@ export default function Agendamento() {
         p_notes:      client.notes || undefined,
       })
 
+      // Backend confirmou com sucesso: limpa o cache temporário
+      clearCachedClientData()
+
       setBooking((prev) => ({
         ...prev,
         isSubmitting: false,
         isSuccess: true,
       }))
     } catch (err) {
+      // Se houver erro, os dados são PRESERVADOS no localStorage
       const friendly = getFriendlyError(err)
       const isConflict = friendly.toLowerCase().includes('horário')
 

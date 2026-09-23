@@ -128,11 +128,12 @@ export default function StepReview({
       )}
 
       {/* Navegação */}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <button
+          type="button"
           onClick={onBack}
           disabled={isSubmitting}
-          className="text-sm text-[#71717A] hover:text-[#18181B] transition-colors disabled:opacity-50"
+          className="text-sm text-[#71717A] hover:text-[#18181B] transition-colors disabled:opacity-50 py-2 text-center sm:text-left"
         >
           ← Voltar
         </button>

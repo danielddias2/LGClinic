@@ -101,8 +101,8 @@ export default function StepSlot({
                   'py-3 text-sm text-center border transition-all duration-150',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C4976A] focus-visible:ring-offset-1',
                   isSelected
-                    ? 'border-[#C4976A] bg-[#C4976A] text-[#FAFAF8] font-medium'
-                    : 'border-[#E8E0D6] text-[#18181B] hover:border-[#C4976A] hover:text-[#C4976A]',
+                    ? 'border-[#C4976A] bg-[#C4976A] text-[#18181B] font-semibold'
+                    : 'border-[#E8E0D6] text-[#18181B] hover:border-[#C4976A] hover:bg-[#F5EFE8]',
                 ].join(' ')}
               >
                 {formatTimeDisplay(slot.start_at)}
@@ -113,10 +113,11 @@ export default function StepSlot({
       )}
 
       {/* Navegação */}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4 pt-2">
         <button
+          type="button"
           onClick={onBack}
-          className="text-sm text-[#71717A] hover:text-[#18181B] transition-colors"
+          className="text-sm text-[#71717A] hover:text-[#18181B] transition-colors py-2 text-center sm:text-left"
         >
           ← Voltar
         </button>

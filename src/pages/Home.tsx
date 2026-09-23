@@ -44,8 +44,7 @@ function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <Link
                 to="/agendamento"
-                className="btn-nav-dark inline-flex items-center justify-center px-8 py-4 text-sm font-semibold tracking-wide text-white bg-[#18181B] hover:bg-[#2D2D2F] hover:text-white transition-colors duration-200 rounded"
-                style={{ color: '#ffffff', backgroundColor: '#18181b' }}
+                className="btn-nav-dark inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 text-sm font-semibold tracking-wide rounded"
               >
                 Agendar consulta
               </Link>

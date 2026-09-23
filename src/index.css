@@ -61,19 +61,39 @@ video {
   }
 }
 
-/* ── Botões de Navegação & Ação (Fundo Preto / Fonte Branca) ── */
+/* ── Botões de Navegação & Ação (Fundo Preto / Texto Branco -> Hover/Active Nude / Texto Preto) ── */
 .btn-nav-dark,
 a.btn-nav-dark,
 button.btn-nav-dark {
   background-color: #18181B !important;
   color: #FFFFFF !important;
+  border: 1px solid #18181B !important;
+  transition: all 0.2s ease-in-out;
 }
 
-.btn-nav-dark:hover,
-a.btn-nav-dark:hover,
-button.btn-nav-dark:hover {
-  background-color: #2D2D2F !important;
+.btn-nav-dark:not(:disabled):not([aria-disabled="true"]):hover,
+.btn-nav-dark:not(:disabled):not([aria-disabled="true"]):active,
+.btn-nav-dark:not(:disabled):not([aria-disabled="true"]):focus-visible,
+a.btn-nav-dark:not([aria-disabled="true"]):hover,
+a.btn-nav-dark:not([aria-disabled="true"]):active,
+a.btn-nav-dark:not([aria-disabled="true"]):focus-visible,
+button.btn-nav-dark:not(:disabled):hover,
+button.btn-nav-dark:not(:disabled):active,
+button.btn-nav-dark:not(:disabled):focus-visible {
+  background-color: #C4976A !important;
+  color: #18181B !important;
+  border-color: #C4976A !important;
+}
+
+button.btn-nav-dark:disabled,
+button.btn-nav-dark[disabled],
+a.btn-nav-dark[aria-disabled="true"] {
+  background-color: #18181B !important;
   color: #FFFFFF !important;
+  border-color: #18181B !important;
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
 }
 
 /* ── Typography helpers ─────────────────────────────────────── */

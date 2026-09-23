@@ -68,7 +68,7 @@ export default function StepSuccess({ service, date, slot }: StepSuccessProps) {
       {/* Ação */}
       <Link
         to="/"
-        className="inline-flex items-center justify-center px-8 py-3.5 text-sm font-medium tracking-wide text-[#FAFAF8] bg-[#18181B] hover:bg-[#C4976A] transition-colors duration-200"
+        className="btn-nav-dark inline-flex items-center justify-center w-full sm:w-auto px-8 py-3.5 text-sm font-semibold tracking-wide rounded"
       >
         Voltar ao início
       </Link>
