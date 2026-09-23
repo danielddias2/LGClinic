@@ -54,9 +54,26 @@ video {
   display: block;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+/* ── Botões de Navegação & Ação (Fundo Preto / Fonte Branca) ── */
+.btn-nav-dark,
+a.btn-nav-dark,
+button.btn-nav-dark {
+  background-color: #18181B !important;
+  color: #FFFFFF !important;
+}
+
+.btn-nav-dark:hover,
+a.btn-nav-dark:hover,
+button.btn-nav-dark:hover {
+  background-color: #2D2D2F !important;
+  color: #FFFFFF !important;
 }
 
 /* ── Typography helpers ─────────────────────────────────────── */

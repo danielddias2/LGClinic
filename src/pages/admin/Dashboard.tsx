@@ -56,7 +56,8 @@ class DashboardErrorBoundary extends Component<
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="px-5 py-2.5 bg-[#18181B] text-[#FAFAF8] text-xs sm:text-sm font-bold rounded-lg hover:bg-[#C4976A] transition-colors"
+                className="btn-nav-dark px-5 py-2.5 bg-[#18181B] text-white text-xs sm:text-sm font-bold rounded-lg hover:bg-[#2D2D2F] hover:text-white transition-colors"
+                style={{ color: '#ffffff', backgroundColor: '#18181b' }}
               >
                 Recarregar página
               </button>
@@ -494,7 +495,8 @@ function DashboardContent() {
               <div className="pt-2">
                 <Link
                   to="/admin/agenda"
-                  className="inline-flex items-center justify-center px-5 py-2.5 text-xs sm:text-sm font-bold bg-[#18181B] text-[#FAFAF8] hover:bg-[#C4976A] transition-colors rounded-lg shadow-xs"
+                  className="btn-nav-dark inline-flex items-center justify-center px-5 py-2.5 text-xs sm:text-sm font-bold bg-[#18181B] text-white hover:bg-[#2D2D2F] hover:text-white transition-colors rounded-lg shadow-xs"
+                  style={{ color: '#ffffff', backgroundColor: '#18181b' }}
                 >
                   Abrir Agenda
                 </Link>
@@ -656,7 +658,8 @@ function DashboardContent() {
                         )}
                         <Link
                           to="/admin/agenda"
-                          className="flex-1 py-2 px-3 bg-[#18181B] text-[#FAFAF8] rounded-lg text-xs font-bold flex items-center justify-center hover:bg-[#C4976A] transition-colors"
+                          className="btn-nav-dark flex-1 py-2 px-3 bg-[#18181B] text-white rounded-lg text-xs font-bold flex items-center justify-center hover:bg-[#2D2D2F] hover:text-white transition-colors"
+                          style={{ color: '#ffffff', backgroundColor: '#18181b' }}
                         >
                           Ver na Agenda
                         </Link>

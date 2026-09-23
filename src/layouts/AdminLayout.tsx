@@ -96,11 +96,12 @@ export default function AdminLayout() {
                 key={item.to}
                 to={item.to}
                 className={[
-                  'block px-3 py-2.5 text-sm rounded transition-colors',
+                  'block px-4 py-3 text-base rounded-lg transition-colors font-semibold',
                   isActive
-                    ? 'bg-[#C4976A] text-[#18181B] font-medium'
-                    : 'text-[#A1A1AA] hover:text-[#FAFAF8]',
+                    ? 'bg-[#C4976A] text-[#18181B] font-bold shadow-xs'
+                    : 'bg-[#18181B] text-white hover:bg-[#2D2D2F] hover:text-white',
                 ].join(' ')}
+                style={isActive ? undefined : { color: '#ffffff', backgroundColor: '#18181b' }}
               >
                 {item.label}
               </Link>
@@ -109,7 +110,8 @@ export default function AdminLayout() {
           <div className="pt-2 border-t border-[#2D2D2F]">
             <button
               onClick={() => supabase.auth.signOut()}
-              className="w-full px-3 py-2 text-sm text-[#71717A] hover:text-[#FAFAF8] text-left transition-colors"
+              className="w-full px-4 py-3 text-base text-white hover:bg-[#2D2D2F] rounded-lg text-left transition-colors font-semibold"
+              style={{ color: '#ffffff' }}
             >
               Sair
             </button>
@@ -132,7 +134,7 @@ export default function AdminLayout() {
             </span>
           </Link>
         </div>
-        <nav className="flex flex-col px-4 py-6 gap-1 flex-1" aria-label="Navegação administrativa">
+        <nav className="flex flex-col px-4 py-6 gap-1.5 flex-1" aria-label="Navegação administrativa">
           {ADMIN_NAV.map((item) => {
             const isActive =
               item.to === '/admin'
@@ -143,11 +145,12 @@ export default function AdminLayout() {
                 key={item.to}
                 to={item.to}
                 className={[
-                  'px-3 py-2.5 text-sm rounded transition-colors duration-150',
+                  'px-3.5 py-2.5 text-sm rounded-lg transition-colors duration-150 font-semibold',
                   isActive
-                    ? 'bg-[#C4976A] text-[#18181B] font-medium'
-                    : 'text-[#A1A1AA] hover:text-[#FAFAF8] hover:bg-[#2D2D2F]',
+                    ? 'bg-[#C4976A] text-[#18181B] font-bold shadow-xs'
+                    : 'bg-[#18181B] text-white hover:bg-[#2D2D2F] hover:text-white',
                 ].join(' ')}
+                style={isActive ? undefined : { color: '#ffffff', backgroundColor: '#18181b' }}
               >
                 {item.label}
               </Link>
@@ -157,7 +160,8 @@ export default function AdminLayout() {
         <div className="px-4 pb-6">
           <button
             onClick={() => supabase.auth.signOut()}
-            className="w-full px-3 py-2.5 text-sm text-[#71717A] hover:text-[#FAFAF8] text-left transition-colors"
+            className="w-full px-3.5 py-2.5 text-sm text-white hover:bg-[#2D2D2F] rounded-lg text-left transition-colors font-semibold"
+            style={{ color: '#ffffff' }}
           >
             Sair
           </button>

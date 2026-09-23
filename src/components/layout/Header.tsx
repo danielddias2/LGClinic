@@ -79,7 +79,8 @@ export default function Header() {
           <div className="hidden md:flex">
             <Link
               to="/agendamento"
-              className="inline-flex items-center px-5 py-2.5 text-sm font-medium tracking-wide text-[#FAFAF8] bg-[#18181B] hover:bg-[#C4976A] transition-colors duration-200"
+              className="btn-nav-dark inline-flex items-center px-5 py-2.5 text-sm font-semibold tracking-wide text-white bg-[#18181B] hover:bg-[#2D2D2F] hover:text-white transition-colors duration-200 rounded"
+              style={{ color: '#ffffff', backgroundColor: '#18181b' }}
             >
               Agendar consulta
             </Link>
@@ -138,7 +139,8 @@ export default function Header() {
           <Link
             to="/agendamento"
             onClick={() => setMobileOpen(false)}
-            className="mt-4 inline-flex items-center justify-center px-6 py-4 text-sm font-medium tracking-wide text-[#FAFAF8] bg-[#18181B]"
+            className="btn-nav-dark mt-4 inline-flex items-center justify-center px-6 py-4 text-base font-semibold tracking-wide text-white bg-[#18181B] hover:bg-[#2D2D2F] hover:text-white transition-colors duration-200 rounded"
+            style={{ color: '#ffffff', backgroundColor: '#18181b' }}
           >
             Agendar consulta
           </Link>
