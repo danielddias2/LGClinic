@@ -100,72 +100,6 @@ function HeroSection() {
   )
 }
 
-// ── Sobre ─────────────────────────────────────────────────────
-function AboutSection() {
-  return (
-    <section
-      id="sobre"
-      className="bg-[#F5EFE8] py-24 sm:py-32 scroll-mt-16 sm:scroll-mt-20"
-      aria-labelledby="about-heading"
-    >
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-          {/* Imagem placeholder mobile/desktop */}
-          <ScrollReveal variant="fade-up" duration={700}>
-            <div
-              className="aspect-square sm:aspect-[4/5] bg-[#E8DDD4] flex items-center justify-center transition-transform duration-300 hover:scale-[1.01]"
-              aria-hidden="true"
-            >
-              <span className="text-xs tracking-[0.2em] uppercase text-[#A89880]">
-                Foto da Dra. Luana Gratão
-              </span>
-            </div>
-          </ScrollReveal>
-
-          {/* Texto */}
-          <ScrollReveal variant="fade-up" delay={150} duration={700} className="space-y-8">
-            <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A]">
-              A profissional
-            </p>
-            <h2
-              id="about-heading"
-              className="font-display text-4xl sm:text-5xl font-light text-[#18181B] leading-snug"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              Dra. Luana Gratão
-            </h2>
-            <div className="space-y-4 text-[#71717A] font-light leading-relaxed">
-              <p>
-                Especialista em estética e cuidados pessoais, a Dra. Luana Gratão
-                fundamenta sua prática em protocolos clínicos precisos e na escuta
-                ativa de cada paciente.
-              </p>
-              <p>
-                Na LG Clinic, cada atendimento é planejado individualmente —
-                do diagnóstico inicial à escolha dos procedimentos mais adequados
-                para o seu perfil.
-              </p>
-            </div>
-            <div className="pt-2">
-              <a
-                href="#contato"
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollToTarget('contato')
-                }}
-                className="inline-flex items-center text-sm font-medium tracking-wide text-[#18181B] border-b border-[#C4976A] pb-0.5 hover:text-[#C4976A] hover:border-[#18181B] transition-all duration-200"
-              >
-                Entrar em contato
-              </a>
-            </div>
-          </ScrollReveal>
-        </div>
-      </div>
-    </section>
-  )
-}
-
 // ── Serviços ──────────────────────────────────────────────────
 function ServicesSection() {
   const { services, state } = useServices()
@@ -273,6 +207,72 @@ function ServicesSection() {
             </Link>
           </ScrollReveal>
         )}
+      </div>
+    </section>
+  )
+}
+
+// ── Sobre ─────────────────────────────────────────────────────
+function AboutSection() {
+  return (
+    <section
+      id="sobre"
+      className="bg-[#F5EFE8] py-24 sm:py-32 scroll-mt-16 sm:scroll-mt-20"
+      aria-labelledby="about-heading"
+    >
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+          {/* Imagem placeholder mobile/desktop */}
+          <ScrollReveal variant="fade-up" duration={700}>
+            <div
+              className="aspect-square sm:aspect-[4/5] bg-[#E8DDD4] flex items-center justify-center transition-transform duration-300 hover:scale-[1.01]"
+              aria-hidden="true"
+            >
+              <span className="text-xs tracking-[0.2em] uppercase text-[#A89880]">
+                Foto da Dra. Luana Gratão
+              </span>
+            </div>
+          </ScrollReveal>
+
+          {/* Texto */}
+          <ScrollReveal variant="fade-up" delay={150} duration={700} className="space-y-8">
+            <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A]">
+              A profissional
+            </p>
+            <h2
+              id="about-heading"
+              className="font-display text-4xl sm:text-5xl font-light text-[#18181B] leading-snug"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              Dra. Luana Gratão
+            </h2>
+            <div className="space-y-4 text-[#71717A] font-light leading-relaxed">
+              <p>
+                Especialista em estética e cuidados pessoais, a Dra. Luana Gratão
+                fundamenta sua prática em protocolos clínicos precisos e na escuta
+                ativa de cada paciente.
+              </p>
+              <p>
+                Na LG Clinic, cada atendimento é planejado individualmente —
+                do diagnóstico inicial à escolha dos procedimentos mais adequados
+                para o seu perfil.
+              </p>
+            </div>
+            <div className="pt-2">
+              <a
+                href="#contato"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToTarget('contato')
+                }}
+                className="inline-flex items-center text-sm font-medium tracking-wide text-[#18181B] border-b border-[#C4976A] pb-0.5 hover:text-[#C4976A] hover:border-[#18181B] transition-all duration-200"
+              >
+                Entrar em contato
+              </a>
+            </div>
+          </ScrollReveal>
+        </div>
       </div>
     </section>
   )
@@ -436,8 +436,8 @@ export default function Home() {
   return (
     <>
       <HeroSection />
-      <AboutSection />
       <ServicesSection />
+      <AboutSection />
       <BookingCtaSection />
       <ContactSection />
     </>
