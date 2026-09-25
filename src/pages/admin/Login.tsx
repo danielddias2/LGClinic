@@ -4,15 +4,22 @@ import { supabase } from '@/lib/supabase'
 import Button from '@/components/ui/Button'
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(() => {
+    return (location.state as { error?: string })?.error ?? null
+  })
+  const [loading, setLoading] = useState(false)
 
   // Redireciona se já autenticado
   useEffect(() => {
+    // Se houver mensagem de erro vinda do guard de rota (ex: não admin), não redireciona
+    if ((location.state as { error?: string })?.error) {
+      return
+    }
+
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
         const from = (location.state as { from?: Location })?.from?.pathname ?? '/admin'

@@ -3,6 +3,7 @@ import { useServices } from '@/hooks/useServices'
 import { useClinicSettings } from '@/hooks/useClinicSettings'
 import Loader from '@/components/ui/Loader'
 import ErrorMessage from '@/components/ui/ErrorMessage'
+import ScrollReveal from '@/components/ui/ScrollReveal'
 
 // ── Hero ──────────────────────────────────────────────────────
 function HeroSection() {
@@ -17,15 +18,15 @@ function HeroSection() {
           {/* Texto */}
           <div className="space-y-8">
             {/* Tag */}
-            <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A]">
+            <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A] animate-hero-fade-up">
               Clínica de Estética e Cuidados Pessoais
             </p>
 
             {/* Título */}
             <h1
               id="hero-heading"
-              className="font-display text-5xl sm:text-6xl lg:text-7xl font-light leading-[1.1] text-[#18181B]"
-              style={{ fontFamily: 'var(--font-display)' }}
+              className="font-display text-5xl sm:text-6xl lg:text-7xl font-light leading-[1.1] text-[#18181B] animate-hero-fade-up"
+              style={{ fontFamily: 'var(--font-display)', animationDelay: '120ms' }}
             >
               Cuidado com
               <br />
@@ -35,22 +36,28 @@ function HeroSection() {
             </h1>
 
             {/* Subtítulo */}
-            <p className="text-base sm:text-lg text-[#71717A] leading-relaxed max-w-md font-light">
+            <p
+              className="text-base sm:text-lg text-[#71717A] leading-relaxed max-w-md font-light animate-hero-fade-up"
+              style={{ animationDelay: '240ms' }}
+            >
               A LG Clinic oferece tratamentos estéticos com foco na experiência
               individualizada. Cada atendimento é pensado para você.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-2">
+            <div
+              className="flex flex-col sm:flex-row gap-4 pt-2 animate-hero-fade-up"
+              style={{ animationDelay: '360ms' }}
+            >
               <Link
                 to="/agendamento"
-                className="btn-nav-dark inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 text-sm font-semibold tracking-wide rounded"
+                className="btn-nav-dark inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 text-sm font-semibold tracking-wide rounded hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
               >
                 Agendar consulta
               </Link>
               <a
                 href="#servicos"
-                className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium tracking-wide text-[#18181B] border border-[#18181B] hover:border-[#C4976A] hover:text-[#C4976A] transition-colors duration-200"
+                className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium tracking-wide text-[#18181B] border border-[#18181B] hover:border-[#C4976A] hover:text-[#C4976A] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
               >
                 Ver serviços
               </a>
@@ -58,9 +65,12 @@ function HeroSection() {
           </div>
 
           {/* Imagem placeholder */}
-          <div className="relative hidden lg:block">
+          <div
+            className="relative hidden lg:block animate-hero-fade-up"
+            style={{ animationDelay: '200ms' }}
+          >
             <div
-              className="aspect-[3/4] bg-[#F5EFE8] flex items-center justify-center"
+              className="aspect-[3/4] bg-[#F5EFE8] flex items-center justify-center transition-transform duration-500 hover:scale-[1.01]"
               aria-hidden="true"
             >
               <div className="text-center space-y-3 text-[#C4976A]">
@@ -74,7 +84,7 @@ function HeroSection() {
             </div>
             {/* Detalhe decorativo */}
             <div
-              className="absolute -bottom-4 -left-4 w-24 h-24 border border-[#C4976A] -z-10"
+              className="absolute -bottom-4 -left-4 w-24 h-24 border border-[#C4976A] -z-10 transition-transform duration-500 hover:translate-x-1 hover:translate-y-1"
               aria-hidden="true"
             />
           </div>
@@ -96,17 +106,19 @@ function AboutSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
           {/* Imagem placeholder mobile/desktop */}
-          <div
-            className="aspect-square sm:aspect-[4/5] bg-[#E8DDD4] flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <span className="text-xs tracking-[0.2em] uppercase text-[#A89880]">
-              Foto da Dra. Luana Gratão
-            </span>
-          </div>
+          <ScrollReveal variant="fade-up" duration={700}>
+            <div
+              className="aspect-square sm:aspect-[4/5] bg-[#E8DDD4] flex items-center justify-center transition-transform duration-300 hover:scale-[1.01]"
+              aria-hidden="true"
+            >
+              <span className="text-xs tracking-[0.2em] uppercase text-[#A89880]">
+                Foto da Dra. Luana Gratão
+              </span>
+            </div>
+          </ScrollReveal>
 
           {/* Texto */}
-          <div className="space-y-8">
+          <ScrollReveal variant="fade-up" delay={150} duration={700} className="space-y-8">
             <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A]">
               A profissional
             </p>
@@ -132,12 +144,12 @@ function AboutSection() {
             <div className="pt-2">
               <a
                 href="#contato"
-                className="inline-flex items-center text-sm font-medium tracking-wide text-[#18181B] border-b border-[#C4976A] pb-0.5 hover:text-[#C4976A] transition-colors"
+                className="inline-flex items-center text-sm font-medium tracking-wide text-[#18181B] border-b border-[#C4976A] pb-0.5 hover:text-[#C4976A] hover:border-[#18181B] transition-all duration-200"
               >
                 Entrar em contato
               </a>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>
@@ -157,21 +169,23 @@ function ServicesSection() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
 
         {/* Cabeçalho */}
-        <div className="max-w-xl mb-16 space-y-4">
-          <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A]">
-            Serviços
-          </p>
-          <h2
-            id="services-heading"
-            className="font-display text-4xl sm:text-5xl font-light text-[#18181B] leading-snug"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            Tratamentos disponíveis
-          </h2>
-          <p className="text-[#71717A] font-light leading-relaxed">
-            Escolha o serviço mais adequado para você e agende online com facilidade.
-          </p>
-        </div>
+        <ScrollReveal variant="fade-up">
+          <div className="max-w-xl mb-16 space-y-4">
+            <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A]">
+              Serviços
+            </p>
+            <h2
+              id="services-heading"
+              className="font-display text-4xl sm:text-5xl font-light text-[#18181B] leading-snug"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              Tratamentos disponíveis
+            </h2>
+            <p className="text-[#71717A] font-light leading-relaxed">
+              Escolha o serviço mais adequado para você e agende online com facilidade.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* Estados */}
         {state === 'loading' && <Loader label="Carregando serviços…" />}
@@ -188,13 +202,17 @@ function ServicesSection() {
 
         {state === 'success' && services.length > 0 && (
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-[#E8E0D6]">
-            {services.map((service) => (
-              <li
+            {services.map((service, index) => (
+              <ScrollReveal
+                as="li"
                 key={service.id}
-                className="bg-[#FAFAF8] p-8 sm:p-10 space-y-4 hover:bg-[#F5EFE8] transition-colors duration-200 group"
+                variant="fade-up"
+                delay={Math.min(index * 70, 350)}
+                duration={550}
+                className="bg-[#FAFAF8] p-8 sm:p-10 space-y-4 hover:bg-[#F5EFE8] transition-all duration-300 group card-interactive"
               >
                 {/* Linha decorativa */}
-                <div className="w-8 h-px bg-[#C4976A] group-hover:w-12 transition-all duration-300" aria-hidden="true" />
+                <div className="w-8 h-px bg-[#C4976A] group-hover:w-14 transition-all duration-300" aria-hidden="true" />
 
                 <h3 className="font-display text-xl font-light text-[#18181B]" style={{ fontFamily: 'var(--font-display)' }}>
                   {service.name}
@@ -227,23 +245,23 @@ function ServicesSection() {
                   className="inline-flex items-center text-xs tracking-[0.15em] uppercase text-[#C4976A] hover:text-[#18181B] transition-colors mt-2"
                   aria-label={`Agendar ${service.name}`}
                 >
-                  Agendar →
+                  Agendar <span className="ml-1 transition-transform duration-200 group-hover:translate-x-1">→</span>
                 </Link>
-              </li>
+              </ScrollReveal>
             ))}
           </ul>
         )}
 
         {/* CTA global */}
         {state === 'success' && (
-          <div className="mt-12 text-center">
+          <ScrollReveal variant="fade-up" delay={100} className="mt-12 text-center">
             <Link
               to="/agendamento"
-              className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium tracking-wide text-[#18181B] border border-[#18181B] hover:bg-[#18181B] hover:text-[#FAFAF8] transition-colors duration-200"
+              className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium tracking-wide text-[#18181B] border border-[#18181B] hover:bg-[#18181B] hover:text-[#FAFAF8] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
             >
               Ver agenda completa
             </Link>
-          </div>
+          </ScrollReveal>
         )}
       </div>
     </section>
@@ -254,27 +272,29 @@ function ServicesSection() {
 function BookingCtaSection() {
   return (
     <section className="bg-[#18181B] py-20 sm:py-28">
-      <div className="max-w-4xl mx-auto px-5 sm:px-8 lg:px-10 text-center space-y-8">
-        <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A]">
-          Agendamento online
-        </p>
-        <h2
-          className="font-display text-4xl sm:text-5xl lg:text-6xl font-light text-[#FAFAF8] leading-snug"
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
-          Agende no seu tempo,<br />
-          sem complicações.
-        </h2>
-        <p className="text-[#71717A] text-base font-light max-w-md mx-auto leading-relaxed">
-          Escolha o serviço, selecione um horário disponível e confirme seu
-          agendamento diretamente pelo site.
-        </p>
-        <Link
-          to="/agendamento"
-          className="inline-flex items-center justify-center px-10 py-4 text-sm font-medium tracking-wide text-[#18181B] bg-[#C4976A] hover:bg-[#FAFAF8] transition-colors duration-200"
-        >
-          Agendar consulta
-        </Link>
+      <div className="max-w-4xl mx-auto px-5 sm:px-8 lg:px-10 text-center">
+        <ScrollReveal variant="fade-up" className="space-y-8">
+          <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A]">
+            Agendamento online
+          </p>
+          <h2
+            className="font-display text-4xl sm:text-5xl lg:text-6xl font-light text-[#FAFAF8] leading-snug"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            Agende no seu tempo,<br />
+            sem complicações.
+          </h2>
+          <p className="text-[#71717A] text-base font-light max-w-md mx-auto leading-relaxed">
+            Escolha o serviço, selecione um horário disponível e confirme seu
+            agendamento diretamente pelo site.
+          </p>
+          <Link
+            to="/agendamento"
+            className="inline-flex items-center justify-center px-10 py-4 text-sm font-medium tracking-wide text-[#18181B] bg-[#C4976A] hover:bg-[#FAFAF8] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+          >
+            Agendar consulta
+          </Link>
+        </ScrollReveal>
       </div>
     </section>
   )
@@ -294,7 +314,7 @@ function ContactSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
           {/* Texto */}
-          <div className="space-y-6">
+          <ScrollReveal variant="fade-up" className="space-y-6">
             <p className="text-xs tracking-[0.25em] uppercase text-[#C4976A]">Contato</p>
             <h2
               id="contact-heading"
@@ -311,7 +331,7 @@ function ContactSection() {
             {state === 'success' && settings && (
               <dl className="space-y-5 pt-4">
                 {settings.phone && (
-                  <div>
+                  <div className="transition-transform duration-200 hover:translate-x-1">
                     <dt className="text-xs tracking-[0.2em] uppercase text-[#71717A] mb-1">Telefone</dt>
                     <dd>
                       <a
@@ -324,7 +344,7 @@ function ContactSection() {
                   </div>
                 )}
                 {settings.whatsapp && (
-                  <div>
+                  <div className="transition-transform duration-200 hover:translate-x-1">
                     <dt className="text-xs tracking-[0.2em] uppercase text-[#71717A] mb-1">WhatsApp</dt>
                     <dd>
                       <a
@@ -339,7 +359,7 @@ function ContactSection() {
                   </div>
                 )}
                 {settings.email && (
-                  <div>
+                  <div className="transition-transform duration-200 hover:translate-x-1">
                     <dt className="text-xs tracking-[0.2em] uppercase text-[#71717A] mb-1">E-mail</dt>
                     <dd>
                       <a
@@ -352,7 +372,7 @@ function ContactSection() {
                   </div>
                 )}
                 {settings.instagram && (
-                  <div>
+                  <div className="transition-transform duration-200 hover:translate-x-1">
                     <dt className="text-xs tracking-[0.2em] uppercase text-[#71717A] mb-1">Instagram</dt>
                     <dd>
                       <a
@@ -382,17 +402,19 @@ function ContactSection() {
             {state === 'loading' && (
               <div className="pt-4 text-xs text-[#71717A]">Carregando informações…</div>
             )}
-          </div>
+          </ScrollReveal>
 
           {/* Mapa placeholder */}
-          <div
-            className="aspect-square sm:aspect-[4/3] bg-[#E8DDD4] flex items-center justify-center"
-            aria-label="Localização da LG Clinic no mapa"
-          >
-            <span className="text-xs tracking-[0.2em] uppercase text-[#A89880]">
-              Mapa — em breve
-            </span>
-          </div>
+          <ScrollReveal variant="fade-up" delay={150} className="w-full">
+            <div
+              className="aspect-square sm:aspect-[4/3] bg-[#E8DDD4] flex items-center justify-center transition-transform duration-300 hover:scale-[1.01]"
+              aria-label="Localização da LG Clinic no mapa"
+            >
+              <span className="text-xs tracking-[0.2em] uppercase text-[#A89880]">
+                Mapa — em breve
+              </span>
+            </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

@@ -71,10 +71,10 @@ export default function StepService({
                 aria-selected={isSelected}
                 onClick={() => onSelect(service)}
                 className={[
-                  'text-left p-6 border transition-all duration-200',
+                  'text-left p-6 border transition-all duration-200 card-interactive',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C4976A] focus-visible:ring-offset-1',
                   isSelected
-                    ? 'border-[#C4976A] bg-[#F5EFE8]'
+                    ? 'border-[#C4976A] bg-[#F5EFE8] ring-1 ring-[#C4976A]'
                     : 'border-[#E8E0D6] bg-[#FAFAF8] hover:border-[#C4976A] hover:bg-[#F5EFE8]',
                 ].join(' ')}
               >

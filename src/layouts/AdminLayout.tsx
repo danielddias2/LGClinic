@@ -14,19 +14,57 @@ const ADMIN_NAV = [
 
 export default function AdminLayout() {
   const [session, setSession] = useState<Session | null | undefined>(undefined)
+  const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
+    let isMounted = true
+
+    async function verifySession(currentSession: Session | null) {
+      if (!currentSession) {
+        if (isMounted) {
+          setSession(null)
+          setIsAdmin(false)
+        }
+        return
+      }
+
+      if (isMounted) setSession(currentSession)
+
+      // Validação estrita de autorização via RPC segura is_admin (SECURITY DEFINER)
+      try {
+        const { data: isUserAdmin, error: rpcErr } = await supabase.rpc('is_admin')
+        if (isMounted) {
+          if (!rpcErr && typeof isUserAdmin === 'boolean') {
+            setIsAdmin(isUserAdmin)
+          } else {
+            // Fallback para checagem na tabela admin_users
+            const { data, error } = await supabase
+              .from('admin_users')
+              .select('user_id')
+              .eq('user_id', currentSession.user.id)
+              .maybeSingle()
+            setIsAdmin(!error && !!data)
+          }
+        }
+      } catch {
+        if (isMounted) setIsAdmin(false)
+      }
+    }
+
     supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
+      verifySession(data.session)
     })
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s)
+      verifySession(s)
     })
 
-    return () => listener.subscription.unsubscribe()
+    return () => {
+      isMounted = false
+      listener.subscription.unsubscribe()
+    }
   }, [])
 
   // Fecha menu mobile na mudança de rota
@@ -34,11 +72,11 @@ export default function AdminLayout() {
     setMobileMenuOpen(false)
   }, [location.pathname])
 
-  // Aguardando verificação de sessão
-  if (session === undefined) {
+  // Aguardando verificação de sessão e autorização administrativa
+  if (session === undefined || (session && isAdmin === undefined)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FAFAF8]">
-        <Loader label="Verificando acesso…" />
+        <Loader label="Verificando acesso administrativo…" />
       </div>
     )
   }
@@ -46,6 +84,20 @@ export default function AdminLayout() {
   // Não autenticado → redireciona para login
   if (!session) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />
+  }
+
+  // Autenticado mas sem autorização administrativa
+  if (isAdmin === false) {
+    return (
+      <Navigate
+        to="/admin/login"
+        state={{
+          from: location,
+          error: 'Acesso restrito: seu usuário não possui privilégios de administrador.',
+        }}
+        replace
+      />
+    )
   }
 
   return (

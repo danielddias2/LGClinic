@@ -10,14 +10,37 @@ interface StepFormProps {
 }
 
 export default function StepForm({ data, onChange, onNext, onBack }: StepFormProps) {
-  const [touched, setTouched] = useState({ name: false, phone: false })
+  const [touched, setTouched] = useState({ name: false, phone: false, email: false })
+  const [honeypot, setHoneypot] = useState('')
 
-  const nameError  = touched.name  && !data.name.trim()  ? 'Nome é obrigatório'     : null
-  const phoneError = touched.phone && !data.phone.trim() ? 'Telefone é obrigatório' : null
+  const trimmedName = data.name.trim()
+  const digitsOnlyPhone = data.phone.replace(/\D/g, '')
+  const trimmedEmail = (data.email || '').trim()
+
+  const nameError = touched.name && !trimmedName ? 'Nome é obrigatório' : null
+  const phoneError = touched.phone
+    ? !trimmedName && !data.phone.trim()
+      ? 'Telefone é obrigatório'
+      : digitsOnlyPhone.length > 0 && digitsOnlyPhone.length < 10
+      ? 'Telefone deve incluir DDD e ao menos 8 ou 9 dígitos'
+      : !data.phone.trim()
+      ? 'Telefone é obrigatório'
+      : null
+    : null
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const emailError = touched.email && trimmedEmail && !emailRegex.test(trimmedEmail)
+    ? 'E-mail em formato inválido'
+    : null
 
   function handleNext() {
-    setTouched({ name: true, phone: true })
-    if (!data.name.trim() || !data.phone.trim()) return
+    setTouched({ name: true, phone: true, email: true })
+    if (honeypot) {
+      // Bot detectado: não avança silenciosamente
+      return
+    }
+    if (!trimmedName || !data.phone.trim() || digitsOnlyPhone.length < 10) return
+    if (trimmedEmail && !emailRegex.test(trimmedEmail)) return
     onNext()
   }
 
@@ -26,7 +49,7 @@ export default function StepForm({ data, onChange, onNext, onBack }: StepFormPro
       onChange({ ...data, [field]: e.target.value })
   }
 
-  function touch(field: 'name' | 'phone') {
+  function touch(field: 'name' | 'phone' | 'email') {
     return () => setTouched((t) => ({ ...t, [field]: true }))
   }
 
@@ -56,6 +79,20 @@ export default function StepForm({ data, onChange, onNext, onBack }: StepFormPro
         </p>
       </div>
 
+      {/* Campo Honeypot para proteção contra bots (invisível para humanos) */}
+      <div className="opacity-0 absolute -z-50 pointer-events-none h-0 w-0 overflow-hidden" aria-hidden="true">
+        <label htmlFor="b_hp_check">Não preencha este campo</label>
+        <input
+          id="b_hp_check"
+          type="text"
+          name="b_hp_check"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       {/* Formulário */}
       <div className="max-w-md space-y-5">
 
@@ -71,6 +108,7 @@ export default function StepForm({ data, onChange, onNext, onBack }: StepFormPro
             id="form-name"
             type="text"
             autoComplete="name"
+            maxLength={100}
             value={data.name}
             onChange={update('name')}
             onBlur={touch('name')}
@@ -94,6 +132,7 @@ export default function StepForm({ data, onChange, onNext, onBack }: StepFormPro
             id="form-phone"
             type="tel"
             autoComplete="tel"
+            maxLength={20}
             value={data.phone}
             onChange={update('phone')}
             onBlur={touch('phone')}
@@ -120,11 +159,16 @@ export default function StepForm({ data, onChange, onNext, onBack }: StepFormPro
             id="form-email"
             type="email"
             autoComplete="email"
+            maxLength={100}
             value={data.email}
             onChange={update('email')}
+            onBlur={touch('email')}
             placeholder="seu@email.com"
-            className={`${inputBase} ${inputOk}`}
+            className={`${inputBase} ${emailError ? inputErr : inputOk}`}
           />
+          {emailError && (
+            <p role="alert" className="text-xs text-red-600">{emailError}</p>
+          )}
         </div>
 
         {/* Observações */}
@@ -141,6 +185,7 @@ export default function StepForm({ data, onChange, onNext, onBack }: StepFormPro
           <textarea
             id="form-notes"
             rows={3}
+            maxLength={500}
             value={data.notes}
             onChange={update('notes')}
             placeholder="Alguma informação adicional para a profissional…"

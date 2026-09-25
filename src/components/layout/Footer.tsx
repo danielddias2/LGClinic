@@ -33,10 +33,10 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-xs tracking-[0.2em] uppercase text-[#71717A]">Navegação</h3>
             <nav className="flex flex-col gap-3" aria-label="Links do rodapé">
-              <a href="/#servicos" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] transition-colors">Serviços</a>
-              <a href="/#sobre" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] transition-colors">Sobre</a>
-              <a href="/#contato" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] transition-colors">Contato</a>
-              <Link to="/agendamento" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] transition-colors">Agendamento</Link>
+              <a href="/#servicos" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200">Serviços</a>
+              <a href="/#sobre" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200">Sobre</a>
+              <a href="/#contato" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200">Contato</a>
+              <Link to="/agendamento" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200">Agendamento</Link>
             </nav>
           </div>
 
@@ -47,7 +47,7 @@ export default function Footer() {
               {settings?.phone && (
                 <a
                   href={`tel:${settings.phone.replace(/\D/g, '')}`}
-                  className="text-sm text-[#FAFAF8] hover:text-[#C4976A] transition-colors"
+                  className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200"
                 >
                   {settings.phone}
                 </a>
@@ -57,7 +57,7 @@ export default function Footer() {
                   href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-[#FAFAF8] hover:text-[#C4976A] transition-colors"
+                  className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200"
                 >
                   WhatsApp
                 </a>
@@ -65,7 +65,7 @@ export default function Footer() {
               {settings?.email && (
                 <a
                   href={`mailto:${settings.email}`}
-                  className="text-sm text-[#FAFAF8] hover:text-[#C4976A] transition-colors"
+                  className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200"
                 >
                   {settings.email}
                 </a>
@@ -75,7 +75,7 @@ export default function Footer() {
                   href={`https://instagram.com/${settings.instagram.replace('@', '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-[#FAFAF8] hover:text-[#C4976A] transition-colors"
+                  className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200"
                 >
                   @{settings.instagram.replace('@', '')}
                 </a>

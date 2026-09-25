@@ -98,7 +98,7 @@ export default function StepSlot({
                 aria-selected={isSelected}
                 onClick={() => onSelect(slot)}
                 className={[
-                  'py-3 text-sm text-center border transition-all duration-150',
+                  'py-3 text-sm text-center border transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C4976A] focus-visible:ring-offset-1',
                   isSelected
                     ? 'border-[#C4976A] bg-[#C4976A] text-[#18181B] font-semibold'

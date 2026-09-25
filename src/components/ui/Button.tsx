@@ -42,9 +42,10 @@ export default function Button({
       className={[
         'inline-flex items-center justify-center gap-2',
         'font-body font-medium tracking-wide',
-        'transition-all duration-200',
+        'transition-all duration-200 ease-out',
+        'hover:-translate-y-0.5 active:translate-y-0',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-        'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
+        'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:transform-none',
         variantClasses[variant],
         sizeClasses[size],
         className,

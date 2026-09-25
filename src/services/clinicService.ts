@@ -203,4 +203,12 @@ export async function getClientAppointments(
   return (data as AdminAppointment[]) ?? []
 }
 
+// ── Verificação de privilégios de administrador ───────────────
+
+export async function checkIsAdmin(): Promise<boolean> {
+  const { data, error } = await supabase.rpc('is_admin')
+  if (error) return false
+  return Boolean(data)
+}
+
 

@@ -129,8 +129,37 @@ export default function Agendamento() {
   // ── Submit ────────────────────────────────────────────────
 
   async function handleSubmit() {
-    const { service, slot, client } = booking
-    if (!service || !slot) return
+    const { service, slot, client, isSubmitting } = booking
+    if (!service || !slot || isSubmitting) return
+
+    const trimmedName = client.name.trim()
+    const trimmedPhone = client.phone.trim()
+    const digitsOnlyPhone = trimmedPhone.replace(/\D/g, '')
+    const trimmedEmail = client.email ? client.email.trim() : ''
+
+    if (!trimmedName) {
+      setBooking((prev) => ({
+        ...prev,
+        submitError: 'Por favor, preencha o seu nome.',
+      }))
+      return
+    }
+
+    if (!trimmedPhone || digitsOnlyPhone.length < 10) {
+      setBooking((prev) => ({
+        ...prev,
+        submitError: 'Por favor, informe um telefone válido com DDD (mínimo 10 dígitos).',
+      }))
+      return
+    }
+
+    if (trimmedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setBooking((prev) => ({
+        ...prev,
+        submitError: 'Por favor, informe um e-mail válido ou deixe o campo em branco.',
+      }))
+      return
+    }
 
     setBooking((prev) => ({
       ...prev,
@@ -140,12 +169,12 @@ export default function Agendamento() {
 
     try {
       await createPublicAppointment({
-        p_name:       client.name,
-        p_phone:      client.phone,
-        p_email:      client.email || undefined,
+        p_name:       trimmedName.slice(0, 100),
+        p_phone:      trimmedPhone.slice(0, 20),
+        p_email:      trimmedEmail ? trimmedEmail.slice(0, 100) : undefined,
         p_service_id: service.id,
         p_start_at:   slot.start_at,
-        p_notes:      client.notes || undefined,
+        p_notes:      client.notes?.trim() ? client.notes.trim().slice(0, 500) : undefined,
       })
 
       // Backend confirmou com sucesso: limpa o cache temporário
@@ -186,12 +215,12 @@ export default function Agendamento() {
       {/* Banner da página */}
       <div className="bg-[#F5EFE8] py-10 sm:py-14 border-b border-[#E8E0D6]">
         <div className="max-w-3xl mx-auto px-5 sm:px-8 lg:px-10">
-          <p className="text-[10px] tracking-[0.25em] uppercase text-[#C4976A] mb-3">
+          <p className="text-[10px] tracking-[0.25em] uppercase text-[#C4976A] mb-3 animate-hero-fade-up">
             LG Clinic
           </p>
           <h1
-            className="font-display text-4xl sm:text-5xl font-light text-[#18181B]"
-            style={{ fontFamily: 'var(--font-display)' }}
+            className="font-display text-4xl sm:text-5xl font-light text-[#18181B] animate-hero-fade-up"
+            style={{ fontFamily: 'var(--font-display)', animationDelay: '100ms' }}
           >
             Agendamento
           </h1>
@@ -203,7 +232,7 @@ export default function Agendamento() {
 
         {/* Agendamento desativado */}
         {bookingDisabled && (
-          <div className="py-16 text-center space-y-3">
+          <div className="py-16 text-center space-y-3 animate-step-fade">
             <p className="text-sm text-[#71717A]">
               Os agendamentos online estão temporariamente indisponíveis.
             </p>
@@ -218,63 +247,65 @@ export default function Agendamento() {
           <>
             <BookingProgress currentStep={booking.step} />
 
-            {booking.step === 1 && (
-              <StepService
-                services={services}
-                state={servicesState}
-                selected={booking.service}
-                onSelect={selectService}
-                onNext={goNext}
-              />
-            )}
-
-            {booking.step === 2 && booking.service && (
-              <StepDate
-                service={booking.service}
-                selectedDate={booking.date}
-                onDateChange={selectDate}
-                onNext={goNext}
-                onBack={goBack}
-              />
-            )}
-
-            {booking.step === 3 && booking.service && booking.date && (
-              <StepSlot
-                service={booking.service}
-                date={booking.date}
-                selected={booking.slot}
-                onSelect={selectSlot}
-                onNext={goNext}
-                onBack={goBack}
-                conflictError={booking.conflictError}
-              />
-            )}
-
-            {booking.step === 4 && (
-              <StepForm
-                data={booking.client}
-                onChange={updateClient}
-                onNext={goNext}
-                onBack={goBack}
-              />
-            )}
-
-            {booking.step === 5 &&
-              booking.service &&
-              booking.slot &&
-              booking.date && (
-                <StepReview
-                  service={booking.service}
-                  date={booking.date}
-                  slot={booking.slot}
-                  client={booking.client}
-                  isSubmitting={booking.isSubmitting}
-                  error={booking.submitError}
-                  onConfirm={handleSubmit}
-                  onBack={goBack}
-                  onChangeSlot={() => goToStep(3)}
+            <div key={booking.step} className="animate-step-fade">
+              {booking.step === 1 && (
+                <StepService
+                  services={services}
+                  state={servicesState}
+                  selected={booking.service}
+                  onSelect={selectService}
+                  onNext={goNext}
                 />
               )}
+
+              {booking.step === 2 && booking.service && (
+                <StepDate
+                  service={booking.service}
+                  selectedDate={booking.date}
+                  onDateChange={selectDate}
+                  onNext={goNext}
+                  onBack={goBack}
+                />
+              )}
+
+              {booking.step === 3 && booking.service && booking.date && (
+                <StepSlot
+                  service={booking.service}
+                  date={booking.date}
+                  selected={booking.slot}
+                  onSelect={selectSlot}
+                  onNext={goNext}
+                  onBack={goBack}
+                  conflictError={booking.conflictError}
+                />
+              )}
+
+              {booking.step === 4 && (
+                <StepForm
+                  data={booking.client}
+                  onChange={updateClient}
+                  onNext={goNext}
+                  onBack={goBack}
+                />
+              )}
+
+              {booking.step === 5 &&
+                booking.service &&
+                booking.slot &&
+                booking.date && (
+                  <StepReview
+                    service={booking.service}
+                    date={booking.date}
+                    slot={booking.slot}
+                    client={booking.client}
+                    isSubmitting={booking.isSubmitting}
+                    error={booking.submitError}
+                    onConfirm={handleSubmit}
+                    onBack={goBack}
+                    onChangeSlot={() => goToStep(3)}
+                  />
+                )}
+            </div>
           </>
         )}
 
@@ -283,11 +314,13 @@ export default function Agendamento() {
           booking.service &&
           booking.slot &&
           booking.date && (
-            <StepSuccess
-              service={booking.service}
-              date={booking.date}
-              slot={booking.slot}
-            />
+            <div className="animate-step-fade">
+              <StepSuccess
+                service={booking.service}
+                date={booking.date}
+                slot={booking.slot}
+              />
+            </div>
           )}
       </div>
     </div>

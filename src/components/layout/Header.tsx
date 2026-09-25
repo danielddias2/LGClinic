@@ -68,7 +68,7 @@ export default function Header() {
               <a
                 key={link.to}
                 href={link.to}
-                className="text-sm tracking-wide text-[#18181B] hover:text-[#C4976A] transition-colors duration-200"
+                className="nav-link-subtle text-sm tracking-wide text-[#18181B] hover:text-[#C4976A]"
               >
                 {link.label}
               </a>
@@ -79,7 +79,7 @@ export default function Header() {
           <div className="hidden md:flex">
             <Link
               to="/agendamento"
-              className="btn-nav-dark inline-flex items-center px-5 py-2.5 text-sm font-semibold tracking-wide rounded"
+              className="btn-nav-dark inline-flex items-center px-5 py-2.5 text-sm font-semibold tracking-wide rounded hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
             >
               Agendar consulta
             </Link>
@@ -120,17 +120,20 @@ export default function Header() {
         id="mobile-nav"
         aria-hidden={!mobileOpen}
         className={[
-          'md:hidden fixed inset-0 top-16 bg-[#FAFAF8] z-40 transition-all duration-300 flex flex-col',
-          mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+          'md:hidden fixed inset-0 top-16 bg-[#FAFAF8] z-40 transition-all duration-300 ease-out flex flex-col',
+          mobileOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none',
         ].join(' ')}
       >
         <nav className="flex flex-col px-5 pt-8 gap-6" aria-label="Navegação mobile">
-          {NAV_LINKS.map((link) => (
+          {NAV_LINKS.map((link, index) => (
             <a
               key={link.to}
               href={link.to}
               onClick={() => setMobileOpen(false)}
-              className="text-lg font-light tracking-wide text-[#18181B] border-b border-[#E8E0D6] pb-4"
+              className="text-lg font-light tracking-wide text-[#18181B] border-b border-[#E8E0D6] pb-4 hover:text-[#C4976A] hover:pl-1 transition-all duration-200"
+              style={{
+                transitionDelay: mobileOpen ? `${index * 40}ms` : '0ms',
+              }}
             >
               {link.label}
             </a>
@@ -138,7 +141,7 @@ export default function Header() {
           <Link
             to="/agendamento"
             onClick={() => setMobileOpen(false)}
-            className="btn-nav-dark mt-4 inline-flex items-center justify-center w-full px-6 py-4 text-base font-semibold tracking-wide rounded"
+            className="btn-nav-dark mt-4 inline-flex items-center justify-center w-full px-6 py-4 text-base font-semibold tracking-wide rounded active:scale-[0.99] transition-transform duration-150"
           >
             Agendar consulta
           </Link>
