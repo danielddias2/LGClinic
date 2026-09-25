@@ -33,7 +33,14 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* 80px para o header desktop/tablet */
   -webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 639px) {
+  html {
+    scroll-padding-top: 4rem; /* 64px para o header mobile */
+  }
 }
 
 body {

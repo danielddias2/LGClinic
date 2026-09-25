@@ -4,12 +4,14 @@ import { useClinicSettings } from '@/hooks/useClinicSettings'
 import Loader from '@/components/ui/Loader'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 import ScrollReveal from '@/components/ui/ScrollReveal'
+import { scrollToTarget } from '@/utils/navigation'
 
 // ── Hero ──────────────────────────────────────────────────────
 function HeroSection() {
   return (
     <section
-      className="relative min-h-screen flex items-center bg-[#FAFAF8] pt-16"
+      id="inicio"
+      className="relative min-h-screen flex items-center bg-[#FAFAF8] pt-16 scroll-mt-16 sm:scroll-mt-20"
       aria-labelledby="hero-heading"
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 w-full">
@@ -57,6 +59,10 @@ function HeroSection() {
               </Link>
               <a
                 href="#servicos"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToTarget('servicos')
+                }}
                 className="inline-flex items-center justify-center px-8 py-4 text-sm font-medium tracking-wide text-[#18181B] border border-[#18181B] hover:border-[#C4976A] hover:text-[#C4976A] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
               >
                 Ver serviços
@@ -99,7 +105,7 @@ function AboutSection() {
   return (
     <section
       id="sobre"
-      className="bg-[#F5EFE8] py-24 sm:py-32"
+      className="bg-[#F5EFE8] py-24 sm:py-32 scroll-mt-16 sm:scroll-mt-20"
       aria-labelledby="about-heading"
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
@@ -144,6 +150,10 @@ function AboutSection() {
             <div className="pt-2">
               <a
                 href="#contato"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToTarget('contato')
+                }}
                 className="inline-flex items-center text-sm font-medium tracking-wide text-[#18181B] border-b border-[#C4976A] pb-0.5 hover:text-[#C4976A] hover:border-[#18181B] transition-all duration-200"
               >
                 Entrar em contato
@@ -163,7 +173,7 @@ function ServicesSection() {
   return (
     <section
       id="servicos"
-      className="bg-[#FAFAF8] py-24 sm:py-32"
+      className="bg-[#FAFAF8] py-24 sm:py-32 scroll-mt-16 sm:scroll-mt-20"
       aria-labelledby="services-heading"
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
@@ -307,7 +317,7 @@ function ContactSection() {
   return (
     <section
       id="contato"
-      className="bg-[#F5EFE8] py-24 sm:py-32"
+      className="bg-[#F5EFE8] py-24 sm:py-32 scroll-mt-16 sm:scroll-mt-20"
       aria-labelledby="contact-heading"
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">

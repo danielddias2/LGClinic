@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useCallback } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { scrollToTarget } from '@/utils/navigation'
 
 const NAV_LINKS = [
   { label: 'Início', to: '/' },
@@ -11,6 +12,8 @@ const NAV_LINKS = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 24)
@@ -21,7 +24,10 @@ export default function Header() {
   // Fecha menu mobile ao redimensionar para desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) setMobileOpen(false)
+      if (window.innerWidth >= 768) {
+        document.body.style.overflow = ''
+        setMobileOpen(false)
+      }
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
@@ -32,6 +38,40 @@ export default function Header() {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
+
+  const handleNavClick = useCallback(
+    (to: string, e: React.MouseEvent<HTMLAnchorElement>) => {
+      // 1. No mobile: desbloqueia o body e fecha o menu imediatamente
+      if (mobileOpen) {
+        document.body.style.overflow = ''
+        setMobileOpen(false)
+      }
+
+      // 2. Destino é o topo ('/')
+      if (to === '/') {
+        if (location.pathname === '/') {
+          e.preventDefault()
+          scrollToTarget('inicio')
+        }
+        return
+      }
+
+      // 3. Destino é uma âncora ('/#sobre', '/#servicos', '/#contato')
+      if (to.startsWith('/#')) {
+        const targetId = to.replace('/#', '')
+        if (location.pathname === '/') {
+          // Já estamos na Home: rolagem suave direta sem recarregar a página
+          e.preventDefault()
+          scrollToTarget(targetId)
+        } else {
+          // Em outra página: navega para a Home com a âncora via React Router
+          e.preventDefault()
+          navigate(to)
+        }
+      }
+    },
+    [mobileOpen, location.pathname, navigate]
+  )
 
   return (
     <header
@@ -48,6 +88,7 @@ export default function Header() {
           {/* Logotipo */}
           <Link
             to="/"
+            onClick={(e) => handleNavClick('/', e)}
             className="flex flex-col leading-none"
             aria-label="LG Clinic — página inicial"
           >
@@ -65,13 +106,14 @@ export default function Header() {
           {/* Nav desktop */}
           <nav className="hidden md:flex items-center gap-8" aria-label="Navegação principal">
             {NAV_LINKS.map((link) => (
-              <a
+              <Link
                 key={link.to}
-                href={link.to}
+                to={link.to}
+                onClick={(e) => handleNavClick(link.to, e)}
                 className="nav-link-subtle text-sm tracking-wide text-[#18181B] hover:text-[#C4976A]"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -126,21 +168,24 @@ export default function Header() {
       >
         <nav className="flex flex-col px-5 pt-8 gap-6" aria-label="Navegação mobile">
           {NAV_LINKS.map((link, index) => (
-            <a
+            <Link
               key={link.to}
-              href={link.to}
-              onClick={() => setMobileOpen(false)}
+              to={link.to}
+              onClick={(e) => handleNavClick(link.to, e)}
               className="text-lg font-light tracking-wide text-[#18181B] border-b border-[#E8E0D6] pb-4 hover:text-[#C4976A] hover:pl-1 transition-all duration-200"
               style={{
                 transitionDelay: mobileOpen ? `${index * 40}ms` : '0ms',
               }}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
           <Link
             to="/agendamento"
-            onClick={() => setMobileOpen(false)}
+            onClick={() => {
+              document.body.style.overflow = ''
+              setMobileOpen(false)
+            }}
             className="btn-nav-dark mt-4 inline-flex items-center justify-center w-full px-6 py-4 text-base font-semibold tracking-wide rounded active:scale-[0.99] transition-transform duration-150"
           >
             Agendar consulta

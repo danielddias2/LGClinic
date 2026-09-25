@@ -8,19 +8,24 @@ interface UseServicesResult {
   error: string | null
 }
 
+let cachedServices: Service[] | null = null
+
 export function useServices(): UseServicesResult {
-  const [services, setServices] = useState<Service[]>([])
-  const [state, setState] = useState<LoadingState>('idle')
+  const [services, setServices] = useState<Service[]>(() => cachedServices || [])
+  const [state, setState] = useState<LoadingState>(() => (cachedServices ? 'success' : 'idle'))
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
 
     async function load() {
-      setState('loading')
+      if (!cachedServices) {
+        setState('loading')
+      }
       try {
         const data = await getActiveServices()
         if (!cancelled) {
+          cachedServices = data
           setServices(data)
           setState('success')
         }

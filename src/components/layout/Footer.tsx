@@ -1,9 +1,25 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useClinicSettings } from '@/hooks/useClinicSettings'
+import { scrollToTarget } from '@/utils/navigation'
 
 export default function Footer() {
   const { settings } = useClinicSettings()
+  const location = useLocation()
+  const navigate = useNavigate()
   const year = new Date().getFullYear()
+
+  const handleNavClick = (to: string, e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (to.startsWith('/#')) {
+      const targetId = to.replace('/#', '')
+      if (location.pathname === '/') {
+        e.preventDefault()
+        scrollToTarget(targetId)
+      } else {
+        e.preventDefault()
+        navigate(to)
+      }
+    }
+  }
 
   return (
     <footer className="bg-[#18181B] text-[#FAFAF8]">
@@ -33,10 +49,33 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-xs tracking-[0.2em] uppercase text-[#71717A]">Navegação</h3>
             <nav className="flex flex-col gap-3" aria-label="Links do rodapé">
-              <a href="/#servicos" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200">Serviços</a>
-              <a href="/#sobre" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200">Sobre</a>
-              <a href="/#contato" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200">Contato</a>
-              <Link to="/agendamento" className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200">Agendamento</Link>
+              <Link
+                to="/#servicos"
+                onClick={(e) => handleNavClick('/#servicos', e)}
+                className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200"
+              >
+                Serviços
+              </Link>
+              <Link
+                to="/#sobre"
+                onClick={(e) => handleNavClick('/#sobre', e)}
+                className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200"
+              >
+                Sobre
+              </Link>
+              <Link
+                to="/#contato"
+                onClick={(e) => handleNavClick('/#contato', e)}
+                className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200"
+              >
+                Contato
+              </Link>
+              <Link
+                to="/agendamento"
+                className="text-sm text-[#FAFAF8] hover:text-[#C4976A] hover:translate-x-1 transition-all duration-200"
+              >
+                Agendamento
+              </Link>
             </nav>
           </div>
 

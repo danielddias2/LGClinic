@@ -9,16 +9,21 @@ interface UseClinicSettingsResult {
   refetch: () => Promise<void>
 }
 
+let cachedSettings: ClinicSettings | null = null
+
 export function useClinicSettings(): UseClinicSettingsResult {
-  const [settings, setSettings] = useState<ClinicSettings | null>(null)
-  const [state, setState] = useState<LoadingState>('idle')
+  const [settings, setSettings] = useState<ClinicSettings | null>(() => cachedSettings)
+  const [state, setState] = useState<LoadingState>(() => (cachedSettings ? 'success' : 'idle'))
   const [error, setError] = useState<string | null>(null)
 
   const load = useCallback(async () => {
-    setState('loading')
+    if (!cachedSettings) {
+      setState('loading')
+    }
     setError(null)
     try {
       const data = await getClinicSettings()
+      cachedSettings = data
       setSettings(data)
       setState('success')
     } catch (err) {
